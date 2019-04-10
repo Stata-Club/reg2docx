@@ -346,8 +346,8 @@ program define reg2docx
 				forvalues mi = 1/`modelnum' {
 					local scl = scalar_mat[`si', `mi']
 					if `scl' < . {
-						if "`stat_`si'_yn'" == "Y" putdocx table regtbl(`row', `=`mi' + 1') = (`"`=subinstr("`: disp `stat_`si'_fmt' `scl''", " ", "", .)'"'), halign(center)
-						else if int(`scl') != `scl' putdocx table regtbl(`row', `=`mi' + 1') = (`"`=subinstr("`: disp `stat_`si'_fmt' `scl''", " ", "", .)'"'), halign(center)
+						if "`stat_`si'_yn'" == "Y" putdocx table regtbl(`row', `=`mi' + 1') = ("`: disp `stat_`si'_fmt' `scl''"), halign(center)
+						else if int(`scl') != `scl' putdocx table regtbl(`row', `=`mi' + 1') = ("`: disp `stat_`si'_fmt' `scl''"), halign(center)
 						else putdocx table regtbl(`row', `=`mi' + 1') = ("`scl'"), halign(center)
 					}
 				}
@@ -362,7 +362,7 @@ program define reg2docx
 			putdocx save `using', `replace'`append'
 		}
 	}
-	di as txt `"regression table have been written to file {browse `using'}"'
+	di as txt `"regression table have been written to file {browse "`using'"}"'
 end
 
 mata

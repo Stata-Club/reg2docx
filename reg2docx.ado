@@ -39,6 +39,11 @@ program define reg2docx
 		disp as error "you could not specify both nomtitle and mtitles|depvars"
 		exit 198
 	}
+
+	if `"`mtitles2'"' != "" & "`depvars'" != "" {
+		disp as error "you could not specify both mtitles() and depvars"
+		exit 198
+	}
 	
 	if ("`parentheses'" != "") & ("`noparentheses'" != "" | "`brackets'" != "") {
 		disp as error "you could not specify both parentheses and noparentheses|brackets"
@@ -78,7 +83,7 @@ program define reg2docx
 			local modelnum = `modelnum' + 1
 			est stat `mdl'
 			mat ictable = r(S)
-			est replay `mdl'
+			cap est replay `mdl'
 			_est unhold `mdl'
 
 			if `stats_number' != 0 {
@@ -341,8 +346,8 @@ program define reg2docx
 				forvalues mi = 1/`modelnum' {
 					local scl = scalar_mat[`si', `mi']
 					if `scl' < . {
-						if "`stat_`si'_yn'" == "Y" putdocx table regtbl(`row', `=`mi' + 1') = ("`: disp `stat_`si'_fmt' `scl''"), halign(center)
-						else if int(`scl') != `scl' putdocx table regtbl(`row', `=`mi' + 1') = ("`: disp `stat_`si'_fmt' `scl''"), halign(center)
+						if "`stat_`si'_yn'" == "Y" putdocx table regtbl(`row', `=`mi' + 1') = (`"`=subinstr("`: disp `stat_`si'_fmt' `scl''", " ", "", .)'"'), halign(center)
+						else if int(`scl') != `scl' putdocx table regtbl(`row', `=`mi' + 1') = (`"`=subinstr("`: disp `stat_`si'_fmt' `scl''", " ", "", .)'"'), halign(center)
 						else putdocx table regtbl(`row', `=`mi' + 1') = ("`scl'"), halign(center)
 					}
 				}
